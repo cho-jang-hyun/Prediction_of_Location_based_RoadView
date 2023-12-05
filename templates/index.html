@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <h1>Image Upload</h1>
+
+    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" accept=".jpg, .jpeg, .png">
+        <input type="submit" value="Upload">
+    </form>
+
+    <div id="loadingMessage" style="display: none;">로딩 중...</div>
+
+    <div id="result"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#uploadForm').submit(function(event) {
+                event.preventDefault();
+
+                // 폼 데이터를 FormData 객체로 생성
+                var formData = new FormData(this);
+
+                // 로딩 메시지 표시
+                $('#loadingMessage').show();
+
+                // 이미지 업로드 요청
+                $.ajax({
+                    url: '/upload',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // 로딩 메시지 감추기
+                        $('#loadingMessage').hide();
+
+                        // 결과 표시
+                        $('#result').html(response.success ? '업로드 성공! 이미지 경로: ' + response.file_path : '업로드 실패: ' + response.error);
+                    },
+                    error: function(error) {
+                        // 로딩 메시지 감추기
+                        $('#loadingMessage').hide();
+
+                        // 에러 메시지 표시
+                        $('#result').html('업로드 중 오류가 발생했습니다.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

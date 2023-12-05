@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naver Maps Panorama Example</title>
+    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=h236y0zsuk&submodules=panorama"></script> 
+</head>
+
+<body>
+    <div id="pano" style="width:100%;height:600px;"></div>
+    <script>
+        var lists = [];
+
+        function createPanorama(lat, lng, Pan) {
+            let pano = new naver.maps.Panorama(document.getElementById("pano"), {
+                position: new naver.maps.LatLng(lat, lng),
+                pov: {
+                    pan: Pan, 
+                    tilt: 15, 
+                    fov: 100
+                },
+                flightSpot: false,
+                logoControl: false
+            });
+
+
+            naver.maps.Event.addListener(pano, "pano_changed", function () {
+                // console.log("PanoramaLocation", pano.getLocation());
+                if (pano.getLocation() != null) {
+                    let dict = pano.getLocation();
+                    console.log(dict['panoId']);
+                    lists.push(dict['panoId']);
+                    console.log(lists);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
